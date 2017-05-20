@@ -3,16 +3,14 @@ package com.convoypayments.web;
 import com.convoypayments.domain.CpRmtAccount;
 import com.convoypayments.domain.CpRmtTxn;
 import com.convoypayments.domain.CpUser;
+import com.convoypayments.mapper.CpRmtAccountMapper;
 import com.convoypayments.mapper.CpRmtTxnMapper;
 import com.convoypayments.mapper.CpUserMapper;
-import com.convoypayments.util.Beans;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,10 +19,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Controller
 @RequestMapping
@@ -37,6 +35,9 @@ public class UserController {
     private CpRmtTxnMapper cpRmtTxnMapper;
 
     @Resource
+    private CpRmtAccountMapper cpRmtAccountMapper;
+
+    @Resource
     private HttpSession session;
 
     @Value("${uploaddir}")
@@ -45,30 +46,14 @@ public class UserController {
     @PostConstruct
     public void testInit() {
         CpRmtTxn cpRmtTxn = cpRmtTxnMapper.selectOne();
-        cpRmtTxn.rcvNamePinyin = "a";
         cpRmtTxn.rcvBankAcctNo = cpRmtTxn.rcvBankAcctNoF6 = "666666";
         cpRmtTxn.rcvMobileNum = "123456789";
-        cpRmtTxn.txnToken = "z";
-        cpRmtTxn.cpMasterAcctNum = BigInteger.TEN;
-        cpRmtTxn.cpRmtAcctNum = BigInteger.ONE;
-        cpRmtTxn.txnId = "123";
+
         //Beans.fill(cpRmtTxn);bug
         //cpRmtTxnMapper.insert(cpRmtTxn);//这条插入语句出错可能是mybatis或oracle的bug
 
     }
 
-
-
-
-    private void printJson(Object o) {
-        ObjectMapper om = new ObjectMapper();
-        om.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        try {
-            System.out.println(om.writeValueAsString(o));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
 
     @GetMapping
     public String index() {
@@ -88,7 +73,7 @@ public class UserController {
         if (cpRmtAccount == null)
             return "redirect:index_err.html";
 
-        cpRmtAccount.loginToken=token;
+        cpRmtAccount.loginToken = token;
 
         if ("cn".equals(lang) && cpRmtAccount.rcvNameSchi != null)
             cpRmtTxn.rcvNamePinyin = cpRmtAccount.rcvNameSchi;
@@ -101,6 +86,9 @@ public class UserController {
 
     @PostMapping("{lang}/createacct.html")
     public String createacct(String uname, String pwd, CpUser cpUser, @PathVariable String lang) {
+
+        if (cpUserMapper.usernameExisted(uname))
+            return "redirect:createacct.html";//账户已存在
 
         CpRmtAccount cpRmtAccount = (CpRmtAccount) session.getAttribute("cpRmtAccount0");
 
@@ -116,14 +104,14 @@ public class UserController {
         cpUser.bankAcctNumF6 = cpRmtAccount.rcvBankAcctNoF6;
         cpUser.namePinyin = cpRmtAccount.rcvNamePinyin;
         cpUser.loginToken = cpRmtAccount.loginToken;
-        cpUser.idProveUploaded="N";
-        cpUser.idProveUploadTs=new Date();
-        cpUser.idProveUpdateTs=new Date();
-        cpUser.idProveUploadPath="";
-        cpUser.addrProveUploaded="";
-        cpUser.addrProveUpdateTs=new Date();
-        cpUser.addrProveUploadPath="";
-        cpUser.addrProveUploadTs=new Date();
+        cpUser.idProveUploaded = "N";
+        cpUser.idProveUploadTs = new Date();
+        cpUser.idProveUpdateTs = new Date();
+        cpUser.idProveUploadPath = "";
+        cpUser.addrProveUploaded = "";
+        cpUser.addrProveUpdateTs = new Date();
+        cpUser.addrProveUploadPath = "";
+        cpUser.addrProveUploadTs = new Date();
 
         cpUserMapper.insert(cpUser);
         cpUserMapper.insertUserRoleMember(cpUser.id);
@@ -143,6 +131,7 @@ public class UserController {
         session.setAttribute("cpRmtAccount", cpRmtAccount);
         List<CpRmtTxn> cpRmtTxns = cpRmtTxnMapper.getByAccount(cpRmtAccount);
 
+        session.setAttribute("cpUser", cpUserMapper.getByName(usrname));
         session.setAttribute("cpRmtTxns", cpRmtTxns);
         session.setAttribute("cpRmtTxns4", cpRmtTxns.size() > 4 ? cpRmtTxns.subList(0, 4) : cpRmtTxns);
 
@@ -150,23 +139,69 @@ public class UserController {
         return "redirect:acctinfo.html";
     }
 
+    @Value("#{{'image/jpeg':'jpg','image/png':'png','image/gif':'gif'}}")
+    private Map<String, String> fmtMap;
+
     @PostMapping("{lang}/upload")
-    public String issueCard(MultipartFile file,@PathVariable String lang) throws IOException {
-        String name=file.getName();
-        System.out.println(file.getOriginalFilename());
-        System.out.println(file.getContentType());
-        file.transferTo(new File(uploaddir+"/"+file.getOriginalFilename()));
+    public String upload(MultipartFile file, String type, @PathVariable String lang) throws IOException {
+        if (file.getSize() > 1 << 20)//文件不得超过1M
+            return "redirect:acctinfo.html";
+
+        CpUser cpUser = (CpUser) session.getAttribute("cpUser");
+
+        String fmt = fmtMap.get(file.getContentType());
+        Long ts = System.currentTimeMillis();
+        String path = uploaddir + "/" + ts + "." + fmt;
+
+        file.transferTo(new File(path));
+        System.out.println(file.getOriginalFilename() + "上传完成");
+
+        if ("card".equals(type)) {
+            if ("Y".equals(cpUser.idProveUploaded)) {
+                cpUser.idProveUpdateTs = new Date();
+                File f = new File(cpUser.idProveUploadPath);
+                if (f.exists()) f.delete();//把原来的删除
+            } else {
+                cpUser.idProveUploaded = "Y";
+                cpUser.idProveUploadTs = cpUser.idProveUpdateTs = new Date();
+                cpUser.idProveUploadPath = path;
+            }
+            cpUserMapper.updateIdByPrimaryKey(cpUser);
+            return "redirect:acctinfo.html";
+        }
+
+        if ("Y".equals(cpUser.addrProveUploaded)) {
+            cpUser.addrProveUpdateTs = new Date();
+            File f = new File(cpUser.addrProveUploadPath);
+            if (f.exists()) f.delete();//把原来的删除
+        } else {
+            cpUser.addrProveUploaded = "Y";
+            cpUser.addrProveUploadTs = cpUser.addrProveUpdateTs = new Date();
+            cpUser.addrProveUploadPath = path;
+        }
+        cpUserMapper.updateAddrByPrimaryKey(cpUser);
         return "redirect:acctinfo.html";
     }
 
+    @ResponseBody
+    @RequestMapping("{lang}/edit")
+    public boolean edit(CpRmtAccount c, @PathVariable String lang) {
+        CpRmtAccount cpRmtAccount = (CpRmtAccount) session.getAttribute("cpRmtAccount");
+        c.cpMasterAcctNum = cpRmtAccount.cpMasterAcctNum;
+        c.cpRmtAcctNum = cpRmtAccount.cpRmtAcctNum;
+        c.rcvNamePinyin = cpRmtAccount.rcvNamePinyin;
+        c.rcvBankAcctNoF6 = cpRmtAccount.rcvBankAcctNoF6;
+        c.rcvMobileNum = cpRmtAccount.rcvMobileNum;
+        cpRmtAccountMapper.updateByPrimaryKeySelective(c);
+        session.setAttribute("cpRmtAccount",cpRmtAccountMapper.selectByPrimaryKey(c));
+        return true;
+    }
 
 
     @GetMapping("{lang}/{a}.html")
-    public String en(@PathVariable String a, @PathVariable String lang) {
+    public String map(@PathVariable String a, @PathVariable String lang) {
         //应该用过滤器或拦截器
-
-
-        /*switch (a) {
+        switch (a) {
             case "createacct":
                 if (session.getAttribute("cpRmtAccount0") == null)
                     return "redirect:index.html";
@@ -175,9 +210,12 @@ public class UserController {
             case "txhistory":
                 if (session.getAttribute("cpRmtAccount") == null)
                     return "redirect:userlogin.html";
-        }*/
-
-
+        }
         return lang + "/" + a;
+    }
+
+    @InitBinder
+    public void initBinder(ServletRequestDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
     }
 }

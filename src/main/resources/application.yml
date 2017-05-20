@@ -11,7 +11,7 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-uploaddir: d:/upload
+uploaddir: d:/0
 
 logging:
   level: debug

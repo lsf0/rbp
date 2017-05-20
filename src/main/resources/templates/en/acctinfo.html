@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en " xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -100,46 +100,58 @@
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="personalprofile">
-                                    <tbody>
+                                    <tbody th:object="${session.cpRmtAccount}">
                                         <tr>
                                             <td class="personal-profile-lable">Name (Pinyin)</td>
-                                            <td class="personal-profile-data">Chen Da Wen</td>
+                                            <td class="personal-profile-data" th:text="*{rcvNamePinyin}"></td>
                                             <td class="personal-profile-lable">Name (Chi)</td>
-                                            <td class="personal-profile-data">陳大文<a href="acctedit.html"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvNameSchi}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvNameSchi" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
                                         <tr>
                                             <td class="personal-profile-lable">Mobile</td>
-                                            <td class="personal-profile-data">98765432</td>
+                                            <td class="personal-profile-data" th:text="*{rcvMobileNum}"></td>
                                             <td class="personal-profile-lable">Email</td>
-                                            <td class="personal-profile-data">chendawen888@gmail.com<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvEmailAddr}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvEmailAddr" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
                                         <tr>
                                             <td class="personal-profile-lable">Name of Bank (Eng)</td>
-                                            <td class="personal-profile-data">Bank of China HK</td>
+                                            <td class="personal-profile-data" th:text="*{rcvBankNameEng}"></td>
                                             <td class="personal-profile-lable">Name of Bank (Chi)</td>
-                                            <td class="personal-profile-data">中銀香港<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvBankNameSchi}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvBankNameSchi" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										<tr>
 											<td class="personal-profile-lable">Bank Account Number</td>
-                                            <td class="personal-profile-data">012 *** *** 1234 5</td>
+                                            <td class="personal-profile-data" th:text="*{rcvBankAcctNo}"></td>
 											<td class="personal-profile-lable">Branch Number</td>
-                                            <td class="personal-profile-data">Tai Yau Street<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvBranchNameEng}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvBranchNameEng" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										<tr>
                                             <td class="personal-profile-lable">Type of ID</td>
-                                            <td class="personal-profile-data">HK ID Card<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i><a onclick="alert('It should be a file upload window')"><i class="fa fa-upload fa-lg" style="float:right;margin-right:9px;margin-top:2px;"></i></a></td>
-                                            <td class="personal-profile-lable">ID Number</td>
-                                            <td class="personal-profile-data">A***789(0)<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvIdType}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvIdType" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a>
+
+                                                <a onclick="document.getElementById('upload1').click()"><i class="fa fa-upload fa-lg" style="float:right;margin-right:9px;margin-top:2px;"></i></a>
+
+                                                <form action="upload?type=card" method="post" enctype="multipart/form-data"><input type="file" name="file" accept="image/jpeg,image/png,image/gif" id="upload1" style="display: none" onchange="this.parentNode.submit()"></form>
+
+                                            </td>
+											
+											<td class="personal-profile-lable">ID Number</td>
+                                          
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvIdNum}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvIdNum" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										 <tr>
                                             <td class="personal-profile-lable">Date of Birth</td>
-                                            <td class="personal-profile-data">1975-05-05<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvDob!=null}? *{#dates.format(rcvDob,'yyyy-MM-dd')}:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvDob" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                             <td class="personal-profile-lable">Occupation</td>
-                                            <td class="personal-profile-data">Businessman<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvOccupation}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvOccupation" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										<tr>
 											<td class="personal-profile-lable">Residential Addr.</td>
-                                            <td colspan="3" ><a href="#" data-toggle="tooltip" class="helper" title="Please make sure this address is the same as your bank account's registered address" style="text-decoration:none;">Flat 168, Some Building, 1 Any Street, Kowloon, Hong Kong</a><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i><a onclick="alert('It should be a file upload window')"><i class="fa fa-upload fa-lg" style="float:right;margin-right:9px;margin-top:2px;"></i></a></td>
+                                            <td colspan="3" ><a href="#" data-toggle="tooltip" class="helper" title="Please make sure this address is the same as your bank account's registered address" style="text-decoration:none;" th:text="*{rcvAddrSchi}"></a>
+                                                <input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvAddrSchi" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a>
+                                                <a onclick="document.getElementById('upload2').click()"><i class="fa fa-upload fa-lg" style="float:right;margin-right:9px;margin-top:2px;"></i></a>
+                                                <form action="upload?type=addr" method="post" enctype="multipart/form-data"><input type="file" name="file" accept="image/jpeg,image/png,image/gif" id="upload2" style="display: none" onchange="this.parentNode.submit()"></form>
+                                            </td>
 										</tr>
                                     </tbody>
                                 </table>
@@ -174,46 +186,17 @@
 										</tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th>0014</th>
-											<th>12/05/2017</th>
-                                            <th>Chen Xiao Wen</th>
-                                            <th>China</th>
-                                            <th>HK$</th>
-                                            <th>1000</th>
-											<th>OK</th>
-											<th>nil</th>
+                                        <tr th:each="cpRmtTxn:${session.cpRmtTxns4}" th:object="${cpRmtTxn}">
+                                            <th th:text="*{txnId}"></th>
+                                            <th th:text="*{txnDate!=null}?*{#dates.format(txnDate,'dd/MM/yyyy')}:''"></th>
+                                            <th th:text="*{senderName}"></th>
+                                            <th th:text="*{senderCountryCode}"></th>
+                                            <th th:text="*{txnCurrency}"></th>
+                                            <th th:text="*{txnAmount}"></th>
+                                            <th th:text="*{txnStatus}"></th>
+                                            <th th:text="*{txnRemark}"></th>
                                         </tr>
-										<tr>
-                                            <th>0013</th>
-											<th>12/05/2017</th>
-                                            <th>Chen San Wen</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1200</th>
-											<th>Pending</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0012</th>
-											<th>11/05/2017</th>
-                                            <th>Li Xiao Hua</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1100</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0011</th>
-											<th>10/05/2017</th>
-                                            <th>Chang Ning </th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1300</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
+										
                                     </tbody>
                                 </table>
                             </div>
@@ -313,6 +296,59 @@
     $('li.page-scroll:eq(5)>a')[0].href=location.href.replace('/en/','/cn/');
     $('li.page-scroll:eq(6)>a')[0].href=location.href.replace('/cn/','/en/');
 </script>
+
+<script type="text/javascript">
+    function edit(o){
+        var i= $(o).prev();
+        i.removeAttr('style');
+        $(o).children('i').attr('class',"fa fa-check-circle fa-lg");
+        $('body').attr('class','acctinfo');
+        var t=i[0].previousSibling;
+
+        o.onclick=function () {
+            ok(o);
+        };
+        ///i.val(t.nodeValue);
+        $(t).remove();
+        i.val('');
+
+    }
+
+    var text1;
+
+    function ok (o) {
+        var i= $(o).prev();
+        i.css('display','none');
+        $(o).children('i').attr('class',"fa fa-pencil-square-o fa-lg");
+        $('body').attr('class','acctinfo');
+
+        o.onclick=function () {
+            edit(o);
+        };
+
+        var v={};
+        v[o.name]=i.val();
+
+        $.ajax({
+            url:"edit",
+            type:"POST",
+            data: v,
+            dataType:'text',
+            success : function(data) {
+                if(data!='true')
+                    alert('fail');
+            },
+            async : false
+        });
+
+
+        var tmp=$('<p></p>').text(i.val());
+        i.before(tmp.html());
+
+    }
+</script>
+
+
 </body>
 
 </html>

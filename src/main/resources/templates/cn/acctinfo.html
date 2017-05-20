@@ -105,50 +105,51 @@
                                             <td class="personal-profile-lable">姓名(拼音)</td>
                                             <td class="personal-profile-data" th:text="*{rcvNamePinyin}"></td>
                                             <td class="personal-profile-lable">姓名(中文)</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvNameSchi}?:'']]<a href="acctedit.html"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvNameSchi}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvNameSchi" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
                                         <tr>
                                             <td class="personal-profile-lable">手机号码</td>
                                             <td class="personal-profile-data" th:text="*{rcvMobileNum}"></td>
                                             <td class="personal-profile-lable">电邮地址</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvEmailAddr}?:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvEmailAddr}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvEmailAddr" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
                                         <tr>
                                             <td class="personal-profile-lable">银行名称(英文)</td>
                                             <td class="personal-profile-data" th:text="*{rcvBankNameEng}"></td>
                                             <td class="personal-profile-lable">银行名称(中文)</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvBankNameSchi}?:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvBankNameSchi}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvBankNameSchi" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										<tr>
 											<td class="personal-profile-lable">银行账户号码</td>
                                             <td class="personal-profile-data" th:text="*{rcvBankAcctNo}"></td>
 											<td class="personal-profile-lable">分行国际代码</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvBranchNameEng}?:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvBranchNameEng}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvBranchNameEng" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										<tr>
                                             <td class="personal-profile-lable">证件类型</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvIdType}?:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvIdType}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvIdType" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a>
 
                                                 <a onclick="document.getElementById('upload1').click()"><i class="fa fa-upload fa-lg" style="float:right;margin-right:9px;margin-top:2px;"></i></a>
 
-                                                <form action="upload" method="post" enctype="multipart/form-data"><input type="file" name="idType" id="upload1" style="display: none" onchange="this.parentNode.submit()"></form>
+                                                <form action="upload?type=card" method="post" enctype="multipart/form-data"><input type="file" name="file" accept="image/jpeg,image/png,image/gif" id="upload1" style="display: none" onchange="this.parentNode.submit()"></form>
 
                                             </td>
                                             <td class="personal-profile-lable">证件号码</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvIdNum}?:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvIdNum}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvIdNum" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 
 										 <tr>
                                             <td class="personal-profile-lable">出生日期</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvDob!=null}? *{#dates.format(rcvDob,'yyyy-MM-dd')}:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvDob!=null}? *{#dates.format(rcvDob,'yyyy-MM-dd')}:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvDob" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                             <td class="personal-profile-lable">职业</td>
-                                            <td class="personal-profile-data" th:inline="text">[[*{rcvOccupation}?:'']]<i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></td>
+                                            <td class="personal-profile-data" th:inline="text">[[*{rcvOccupation}?:'']]<input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvOccupation" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a></td>
                                         </tr>
 										<tr>
 											<td class="personal-profile-lable">住址</td>
-                                            <td colspan="3" ><a href="#" data-toggle="tooltip" class="helper" title="Please make sure this address is the same as your bank account's registered address" style="text-decoration:none;" th:text="*{rcvAddrSchi}"></a><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i>
+                                            <td colspan="3" ><a href="#" data-toggle="tooltip" class="helper" title="Please make sure this address is the same as your bank account's registered address" style="text-decoration:none;" th:text="*{rcvAddrSchi}"></a>
+                                                <input type="text" class="acctedit" autofocus style="display: none;"><a href="#" name="rcvAddrSchi" onclick="edit(this)"><i class="fa fa-pencil-square-o fa-lg" style="float:right;margin-right:5px;margin-top:3px;"></i></a>
                                                 <a onclick="document.getElementById('upload2').click()"><i class="fa fa-upload fa-lg" style="float:right;margin-right:9px;margin-top:2px;"></i></a>
-                                                <form action="upload" method="post" enctype="multipart/form-data"><input type="file" name="addr" id="upload2" style="display: none" onchange="this.parentNode.submit()"></form>
+                                                <form action="upload?type=addr" method="post" enctype="multipart/form-data"><input type="file" name="file" accept="image/jpeg,image/png,image/gif" id="upload2" style="display: none" onchange="this.parentNode.submit()"></form>
                                             </td>
 										</tr>
                                     </tbody>
@@ -293,6 +294,59 @@
     $('li.page-scroll:eq(5)>a')[0].href=location.href.replace('/en/','/cn/');
     $('li.page-scroll:eq(6)>a')[0].href=location.href.replace('/cn/','/en/');
 </script>
+
+<script type="text/javascript">
+    function edit(o){
+        var i= $(o).prev();
+        i.removeAttr('style');
+        $(o).children('i').attr('class',"fa fa-check-circle fa-lg");
+        $('body').attr('class','acctinfo');
+        var t=i[0].previousSibling;
+
+        o.onclick=function () {
+            ok(o);
+        };
+        ///i.val(t.nodeValue);
+        $(t).remove();
+        i.val('');
+
+    }
+
+    var text1;
+
+    function ok (o) {
+        var i= $(o).prev();
+        i.css('display','none');
+        $(o).children('i').attr('class',"fa fa-pencil-square-o fa-lg");
+        $('body').attr('class','acctinfo');
+
+        o.onclick=function () {
+            edit(o);
+        };
+
+        var v={};
+        v[o.name]=i.val();
+
+        $.ajax({
+            url:"edit",
+            type:"POST",
+            data: v,
+            dataType:'text',
+            success : function(data) {
+                if(data!='true')
+                    alert('fail');
+            },
+            async : false
+        });
+
+
+        var tmp=$('<p></p>').text(i.val());
+        i.before(tmp.html());
+
+    }
+</script>
+
+
 </body>
 
 </html>

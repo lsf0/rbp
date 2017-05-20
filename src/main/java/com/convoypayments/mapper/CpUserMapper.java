@@ -30,5 +30,31 @@ public interface CpUserMapper {
             "AND CRA.CP_RMT_ACCT_NUM=CU.CP_RMT_ACCOUNT")
     CpRmtAccount userLogin(@Param("name") String name,@Param("pwd") String pwd);
 
+    @Select("SELECT count(1) FROM CP_USER WHERE USERNAME=#{name}")
+    boolean usernameExisted(String name);
+
+    @Select("SELECT * FROM CP_USER WHERE USERNAME=#{name}")
+    CpUser getByName(String name);
+
+
+    @Update({
+            "UPDATE CP_USER SET ",
+            "ID_PROVE_UPLOADED=#{idProveUploaded},",
+            "ID_PROVE_UPLOAD_TS=#{idProveUploadTs},",
+            "ID_PROVE_UPDATE_TS=#{idProveUpdateTs},",
+            "ID_PROVE_UPLOAD_PATH=#{idProveUploadPath}",
+            "WHERE ID=#{id} AND USERNAME=#{username}"
+    })
+    int updateIdByPrimaryKey(CpUser record);
+
+    @Update({
+            "UPDATE CP_USER SET ",
+            "ADDR_PROVE_UPLOADED=#{addrProveUploaded},",
+            "ADDR_PROVE_UPLOAD_TS=#{addrProveUploadTs},",
+            "ADDR_PROVE_UPDATE_TS=#{addrProveUpdateTs},",
+            "ADDR_PROVE_UPLOAD_PATH=#{addrProveUploadPath}",
+            "WHERE ID=#{id} AND USERNAME=#{username}"
+    })
+    int updateAddrByPrimaryKey(CpUser record);
 
 }

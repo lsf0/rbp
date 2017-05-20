@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -116,146 +116,16 @@
 										</tr>
                                     </thead>
                                     <tbody>
-										<tr>
-                                            <th>0014</th>
-											<th>12/05/2017</th>
-                                            <th>Chen Xiao Wen</th>
-                                            <th>China</th>
-                                            <th>HK$</th>
-                                            <th>1000</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0013</th>
-											<th>12/05/2017</th>
-                                            <th>Chen San Wen</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1200</th>
-											<th>Pending</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0012</th>
-											<th>11/05/2017</th>
-                                            <th>Li Xiao Hua</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1100</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0011</th>
-											<th>10/05/2017</th>
-                                            <th>Chang Ning </th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1300</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0010</th>
-											<th>10/05/2017</th>
-                                            <th>Liu Hua </th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1100</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0009</th>
-											<th>10/05/2017</th>
-                                            <th>Li Xiao Xiao</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>8000</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0008</th>
-											<th>09/05/2017</th>
-                                            <th>Huang Ying Ming</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>12500</th>
-											<th>Cancel</th>
-											<th>Err</th>
-                                        </tr>
-										<tr>
-                                            <th>0007</th>
-											<th>08/05/2017</th>
-                                            <th>Huang Ying Ming</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1250</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0006</th>
-											<th>07/05/2017</th>
-                                            <th>Chang Ning </th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1000</th>
-											<th>Pending</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0005</th>
-											<th>06/05/2017</th>
-                                            <th>He Da Guang</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1100</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0004</th>
-											<th>05/05/2017</th>
-                                            <th>Da Da Da</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1300</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0003</th>
-											<th>03/05/2017</th>
-                                            <th>David Wong</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1600</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0002</th>
-											<th>03/05/2017</th>
-                                            <th>Carl Jackson</th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>1100</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
-										<tr>
-                                            <th>0001</th>
-											<th>02/05/2017</th>
-                                            <th>Huang Xi </th>
-                                            <th>Hong Kong</th>
-                                            <th>HK$</th>
-                                            <th>700</th>
-											<th>OK</th>
-											<th>nil</th>
-                                        </tr>
+                                    <tr th:each="cpRmtTxn:${session.cpRmtTxns}" th:object="${cpRmtTxn}">
+                                        <th th:text="*{txnId}"></th>
+                                        <th th:text="*{#dates.format(txnDate,'dd/MM/yyyy')}"></th>
+                                        <th th:text="*{senderName}"></th>
+                                        <th th:text="*{senderCountryCode}"></th>
+                                        <th th:text="*{txnCurrency}"></th>
+                                        <th th:text="*{txnAmount}"></th>
+                                        <th th:text="*{txnStatus}"></th>
+                                        <th th:text="*{txnRemark}"></th>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
