@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:XE
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: ORAUSER
+    password: 123456
+  thymeleaf:
+    mode: LEGACYHTML5
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+uploaddir: d:/upload
+
+logging:
+  level: debug
+server:
+  port: 80
+
+
+
+
+
